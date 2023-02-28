@@ -2,8 +2,10 @@
     max-width: 768px;
     justify-content: center;
     align-items: center;
-    background: #000;
+    background: #ff6b99;
+    
 }
+
 .df{
     display: flex;
     flex-direction: column;
@@ -11,7 +13,4 @@
 }
 .main-screen-bottom{
     display: flex;
-}
-.main-screen-bottom-right{
-    margin-left: 15px ;
 }
