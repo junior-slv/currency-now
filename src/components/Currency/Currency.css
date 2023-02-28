@@ -1,0 +1,12 @@
+.container{
+    max-width: 768px;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+}
+.main-screen-top{
+    display: flex;
+}
+.main-screen-bottom{
+    display: flex;
+}
