@@ -4,9 +4,14 @@
     align-items: center;
     background: #000;
 }
-.main-screen-top{
+.df{
     display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .main-screen-bottom{
     display: flex;
+}
+.main-screen-bottom-right{
+    margin-left: 15px ;
 }
