@@ -2,6 +2,7 @@
 import { SetStateAction, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import './Currency.css'
 import axios from 'axios'
+import { type } from 'os'
 
 type CurrencyQuote = {
   ask: string,
@@ -38,15 +39,17 @@ const Currency = () => {
       .catch((err) => {
         console.error("Error" + err);
       });
-      let multi:any = currencyQuote?.high
-      multi = parseFloat(multi)
-      setMultiplier(multi)  
+
   }, []);
+  let multi:any = currencyQuote?.high
+  multi = parseFloat(multi)
 
-  const handleChange = () =>{
-    console.log(current)
+  const handleChange = (event: any) =>{
+    setCurrent(parseInt(event.target.value))
   }
-
+  const handleFinal = () =>{
+    setFinalCurrent(current*multi)
+  }
 
   return (
     <div className="container">
@@ -57,8 +60,8 @@ const Currency = () => {
           </div>
           <div className="main-screen-middle df">
             <label htmlFor="">Insert a value</label>
-            <input  onClick={() => handleChange} type="number" name="" id=""  />
-            <input  type="button" value="ENVIAR" />
+            <input  onChange={handleChange} type="number" name="" id=""  />
+            <input  onClick={handleFinal} type="button" value="ENVIAR" />
           </div>
           <div className="main-screen-bottom">
             <div className="main-screen-bottom-left">
@@ -81,7 +84,7 @@ const Currency = () => {
             </div>
 
           </div>
-          <span><p>Final value: {finalCurrent}</p></span>
+          <span><p>Final value: {finalCurrent.toFixed(2)}</p></span>
         </div>
 
     </div>
