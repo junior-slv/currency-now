@@ -23,12 +23,12 @@ const Currency = () => {
   const [current, setCurrent] = useState(0)
   const [finalCurrent, setFinalCurrent] = useState(0)
   const [currencyQuote, setCurrencyQuote] = useState<null | CurrencyQuote>(null)
-  const [multiplier, setMultiplier] = useState(0)
+  const [multiplier, setMultiplier] = useState<null | undefined>(null)
 
   const api = `https://economia.awesomeapi.com.br/last/${firstValue}-${secondValue}`
 
   const idref = useRef(null);
-  let multi:any;
+
 
 
 
@@ -39,19 +39,37 @@ const Currency = () => {
       .catch((err) => {
         console.error("Error" + err);
       });
-      let multi:any = currencyQuote?.high
-      multi = parseFloat(multi)
+
   }, []);
-
-
+  setMultiplier(currencyQuote?.high)
+  let multi:any = currencyQuote?.high
+  multi = parseFloat(multi)
   const handleChange = (event: any) =>{
     setCurrent(parseInt(event.target.value))
   }
-  const handleFinal = () =>{
 
-    console.log(firstValue);
-    console.log(secondValue);
+
+
+
+
+  const handleFinal = () =>{
+    axios
+      .get(api)
+      .then((response) => setCurrencyQuote(Object.values(response.data)[0] as CurrencyQuote))
+      .catch((err) => {
+        console.error("Error" + err);
+      });
+    let multi:any = currencyQuote?.high
+    multi = parseFloat(multi)  
     setFinalCurrent(current*multi)
+    console.log(typeof(finalCurrent));
+    
+    console.log(typeof(current));
+    console.log(typeof(multi));
+    console.log(finalCurrent);
+    
+    
+    
 
   }
 
@@ -91,7 +109,7 @@ const Currency = () => {
             </div>
 
           </div>
-          <span><p>Final value: {finalCurrent.toFixed(2)}</p></span>
+          <span><p>Final value: {finalCurrent}</p></span>
         </div>
 
     </div>
