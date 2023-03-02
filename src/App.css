@@ -43,11 +43,6 @@
   --mb-2: 2rem;
   --mb-2-5: 2.5rem;
   --mb-3: 3rem;
-
-  /*========== z index ==========*/
-  --z-tooltip: 10;
-  --z-fixed: 100;
-  --z-modal: 1000;
 }
 
 /* Responsive typography */
@@ -113,60 +108,11 @@ img {
   height: auto;
 }
 
-/*=============== REUSABLE CSS CLASSES ===============*/
-.section {
-  padding: 6rem 0 2rem;
-}
-
-.section__title {
-  font-size: var(--h1-font-size);
-  color: var(--title-color);
-}
-
-.section__subtitle {
-  display: block;
-  font-size: var(--small-font-size);
-  margin-bottom: 4rem;
-}
-
-.section__title,
-.section__subtitle {
-  text-align: center;
-}
-
 /*=============== LAYOUT ===============*/
 .container {
   max-width: 968px;
   margin-left: auto;
   margin-right: auto;
-}
-
-.grid {
-  display: grid;
-  gap: 1.5rem;
-}
-
-/*=============== BUTTONS ===============*/
-.button {
-  display: inline-block;
-  background-color: var(--title-color);
-  color: var(--container-color);
-  padding: 1.25rem 2rem;
-  border-radius: 1rem;
-  font-weight: var(--font-medium);
-}
-
-.button:hover {
-  background-color: var(--title-color-dark);
-}
-
-.button__icon {
-  margin-left: var(--mb-0-5);
-}
-
-.button--flex {
-  display: inline-flex;
-  align-items: center;
 }
 
 /*=============== BREAKPOINTS ===============*/
@@ -177,14 +123,7 @@ img {
     margin-right: var(--mb-1-5);
   }
 
-  .button {
-    padding: 1rem 1.75rem;
-  }
 
-  .button__icon {
-    width: 22px;
-    height: 22px;
-  }
 }
 
 /* For medium devices */
@@ -193,13 +132,6 @@ img {
     margin: 0 0 var(--header-height) 0;
   }
 
-  .section {
-    padding: 2rem 0 4rem;
-  }
-
-  .section__subtitle {
-    margin-bottom: var(--mb-3);
-  }
 }
 
 @media screen and (max-width: 576px) {
