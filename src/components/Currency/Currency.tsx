@@ -13,9 +13,9 @@ const Currency = () => {
   const [currencyQuote, setCurrencyQuote] = useState<null | CurrencyQuote>(
     null
   );
-  const [loading, setLoading] = useState(false)  
+  const [loading, setLoading] = useState(true)  
   const [multiplier, setMultiplier] = useState(0);
-
+  const [count, setCount] = useState(0);  
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const current = parseInt(e.currentTarget.value)
@@ -33,30 +33,23 @@ const Currency = () => {
       let multi:any = currencyQuote?.high
       multi = parseFloat(multi)
       setLoading(false);
-  }, [handleChange]);
+  }, []);
+    //ARRUMAR UM MANEIRA DE CHAMAR O USEEFFECT ESPECIFICO
+    const toValueChange = (e: any) => {
+    setCurrencyTo(e.target.value)
+    setCount(count + 1);
+      
+    
+  }
 
   let multi: any = currencyQuote?.high;
   multi = parseFloat(multi);
 
   
 
-  const toValueChange = (e: any) => {
-     let tovalue = e.target.value;
-    currencyService
-    .getLastQuote(currencyFrom, currencyTo)
-    .then(data => setCurrencyQuote(data))
-    .catch((err) => {
-      console.error("Error" + err);
-    });
-    let multi:any = currencyQuote?.high
-    multi = parseFloat(multi)
-      console.log(currencyFrom);
-      console.log(currencyTo);
-      
-    
-  }
+
   const fromValueChange = (e: any) => {
-    let fromvalue = e.target.value;
+    setCurrencyFrom(e.target.value)
     // setCurrencyFrom(fromto)
     currencyService
     .getLastQuote(currencyFrom, currencyTo)
