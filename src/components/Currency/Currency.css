@@ -14,3 +14,9 @@
 .main-screen-bottom{
     display: flex;
 }
+.loading{
+    display: block;
+}
+.loading-none{
+    display: none;
+}

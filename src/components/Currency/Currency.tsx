@@ -1,77 +1,83 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import "./Currency.css";
 import axios from "axios";
+import spin from '../../assets/spin.gif'
+import currencyService from "../../services/currency";
+import { CurrencyQuote } from "../../services/currency";
 
-type CurrencyQuote = {
-  ask: string;
-  bid: string;
-  code: string;
-  codein: string;
-  high: number;
-  low: number;
-  varBid: string;
-  pctChange: string;
-  timestamp: string;
-  create_dat: string;
-};
+let fromvalue:any, tovalue:any;
 
 const Currency = () => {
-  const [firstValue, setFirstValue] = useState("BRL");
-  const [secondValue, setSecondValue] = useState("USD");
-  const [current, setCurrent] = useState(0);
-  const [finalCurrent, setFinalCurrent] = useState(0);
+  // const [currencyFrom, setCurrencyFrom] = useState("BRL");
+  // const [currencyTo, setCurrencyTo] = useState("USD");
+  const [finalCurrent, setFinalCurrent] = useState(Number);
   const [currencyQuote, setCurrencyQuote] = useState<null | CurrencyQuote>(
     null
   );
+  const [loading, setLoading] = useState(false)  
   const [multiplier, setMultiplier] = useState(0);
 
-  const api = `https://economia.awesomeapi.com.br/last/${firstValue}-${secondValue}`;
 
   useEffect(() => {
-    axios
-      .get(api)
-      .then((response) =>
-        setCurrencyQuote(Object.values(response.data)[0] as CurrencyQuote)
-      )
+    setLoading(true);
+    currencyService
+      .getLastQuote(fromvalue, tovalue)
+      .then(data => setCurrencyQuote(data))
       .catch((err) => {
         console.error("Error" + err);
       });
+      let multi:any = currencyQuote?.high
+      multi = parseFloat(multi)
+      setLoading(false);
   }, []);
 
   let multi: any = currencyQuote?.high;
   multi = parseFloat(multi);
-  const handleChange = (event: any) => {
-    setCurrent(parseInt(event.target.value));
-    console.log(current);
-  };
 
-  const handleFinal = () => {
-    axios
-      .get(api)
-      .then((response) =>
-        setCurrencyQuote(Object.values(response.data)[0] as CurrencyQuote)
-      )
-      .catch((err) => {
-        console.error("Error" + err);
-      });
-    if(firstValue === secondValue){
-      setFinalCurrent(current)
-    }else{
-    let multi: any = currencyQuote?.high;
-    multi = parseFloat(multi);
-
-    setMultiplier(parseFloat(multi));
-    setFinalCurrent(current * multiplier);
-
-    console.log(typeof finalCurrent);
-    console.log(typeof current);
-    console.log(typeof multi);
-    console.log(finalCurrent);
-    console.log(firstValue);
-    console.log(secondValue);
+  
+  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    const current = parseInt(e.currentTarget.value)
+    setFinalCurrent(current*multi)
   }
-  };
+  const toValueChange = (e: any) => {
+     let tovalue = e.target.value;
+    currencyService
+    .getLastQuote(fromvalue, tovalue)
+    .then(data => setCurrencyQuote(data))
+    .catch((err) => {
+      console.error("Error" + err);
+    });
+    if (Number.isNaN(finalCurrent)){
+      setFinalCurrent(0)
+    }else{
+    let multi:any = currencyQuote?.high
+    multi = parseFloat(multi)
+      console.log(fromvalue);
+      console.log(tovalue);
+      
+    }
+  }
+  const fromValueChange = (e: any) => {
+    let fromvalue = e.target.value;
+    // setCurrencyFrom(fromto)
+    currencyService
+    .getLastQuote(fromvalue, tovalue)
+    .then(data => setCurrencyQuote(data))
+    .catch((err) => {
+      console.error("Error" + err);
+    });
+    if (Number.isNaN(finalCurrent)){
+      setFinalCurrent(0)
+    }else{
+    let multi:any = currencyQuote?.high
+    multi = parseFloat(multi)
+      console.log(fromvalue);
+      console.log(tovalue);
+      
+    }
 
+  }
+  
   return (
     <div className="container">
       <div className="main-screen_ df">
@@ -79,39 +85,40 @@ const Currency = () => {
           <h2>Currency converter</h2>
         </div>
         <div className="main-screen-middle df">
-          <label htmlFor="">Insert a value</label>
-          <input onChange={handleChange} type="number" name="" id="" />
-          <input onClick={handleFinal} type="button" value="ENVIAR" />
         </div>
         <div className="main-screen-bottom">
           <div className="main-screen-bottom-left">
-            <label htmlFor="currency">Choose a currency:</label>
+            <label htmlFor="currency"></label>
             <select
-              value={firstValue}
-              onChange={(event) => setFirstValue(event.target.value)}
+              value={fromvalue}
+              onChange={fromValueChange}
             >
               <option value="BRL">BRL - Real</option>
               <option value="USD">USD - Dolar</option>
               <option value="EUR">EUR - Euro</option>
             </select>
+            <input onChange={handleChange} type="text" placeholder="1" name="" id="" />
+
             <span>
-              <i className="bx bx-right-arrow-alt"></i>
             </span>
           </div>
           <div className="main-screen-bottom-right">
-            <label htmlFor="cars">Choose a currency:</label>
+            <label htmlFor="cars"></label>
             <select
-              value={secondValue}
-              onChange={(event) => setSecondValue(event.target.value)}
+              value={tovalue}
+              onChange={toValueChange}
             >
               <option value="BRL">BRL - Real</option>
               <option value="USD">USD - Dolar</option>
               <option value="EUR">EUR - Euro</option>
             </select>
+            <input onChange={handleChange} type="number" placeholder="1" name="" id="" />
+
           </div>
         </div>
         <span>
-          <p>Final value: {finalCurrent.toFixed(2)}</p>
+          <p>Final value: {finalCurrent}</p>
+          <span className={loading ? 'loading' : 'loading-none'}><img src={spin} alt="" /></span>
         </span>
       </div>
     </div>
