@@ -17,8 +17,8 @@ const instance = axios.create({
 });
 
 const currencyService = {
-  getLastQuote: async (fromvalue: any, tovalue: any) => {
-    const  response  = await instance.get(`/last/${fromvalue}-${tovalue}`);
+  getLastQuote: async (currencyTo: any, currencyFrom: any) => {
+    const  response  = await instance.get(`/last/${currencyTo}-${currencyFrom}`);
     return Object.values(response.data)[0] as CurrencyQuote;
   },
 }

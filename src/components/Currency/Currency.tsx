@@ -5,11 +5,10 @@ import spin from '../../assets/spin.gif'
 import currencyService from "../../services/currency";
 import { CurrencyQuote } from "../../services/currency";
 
-let fromvalue:any, tovalue:any;
 
 const Currency = () => {
-  // const [currencyFrom, setCurrencyFrom] = useState("BRL");
-  // const [currencyTo, setCurrencyTo] = useState("USD");
+  const [currencyFrom, setCurrencyFrom] = useState("BRL");
+  const [currencyTo, setCurrencyTo] = useState("USD");
   const [finalCurrent, setFinalCurrent] = useState(Number);
   const [currencyQuote, setCurrencyQuote] = useState<null | CurrencyQuote>(
     null
@@ -18,10 +17,15 @@ const Currency = () => {
   const [multiplier, setMultiplier] = useState(0);
 
 
+  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    const current = parseInt(e.currentTarget.value)
+    setFinalCurrent(current*multi)
+  }
+
   useEffect(() => {
     setLoading(true);
     currencyService
-      .getLastQuote(fromvalue, tovalue)
+      .getLastQuote(currencyFrom, currencyTo)
       .then(data => setCurrencyQuote(data))
       .catch((err) => {
         console.error("Error" + err);
@@ -29,52 +33,43 @@ const Currency = () => {
       let multi:any = currencyQuote?.high
       multi = parseFloat(multi)
       setLoading(false);
-  }, []);
+  }, [handleChange]);
 
   let multi: any = currencyQuote?.high;
   multi = parseFloat(multi);
 
   
-  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const current = parseInt(e.currentTarget.value)
-    setFinalCurrent(current*multi)
-  }
+
   const toValueChange = (e: any) => {
      let tovalue = e.target.value;
     currencyService
-    .getLastQuote(fromvalue, tovalue)
+    .getLastQuote(currencyFrom, currencyTo)
     .then(data => setCurrencyQuote(data))
     .catch((err) => {
       console.error("Error" + err);
     });
-    if (Number.isNaN(finalCurrent)){
-      setFinalCurrent(0)
-    }else{
     let multi:any = currencyQuote?.high
     multi = parseFloat(multi)
-      console.log(fromvalue);
-      console.log(tovalue);
+      console.log(currencyFrom);
+      console.log(currencyTo);
       
-    }
+    
   }
   const fromValueChange = (e: any) => {
     let fromvalue = e.target.value;
     // setCurrencyFrom(fromto)
     currencyService
-    .getLastQuote(fromvalue, tovalue)
+    .getLastQuote(currencyFrom, currencyTo)
     .then(data => setCurrencyQuote(data))
     .catch((err) => {
       console.error("Error" + err);
     });
-    if (Number.isNaN(finalCurrent)){
-      setFinalCurrent(0)
-    }else{
     let multi:any = currencyQuote?.high
     multi = parseFloat(multi)
-      console.log(fromvalue);
-      console.log(tovalue);
+      console.log(currencyFrom);
+      console.log(currencyTo);
       
-    }
+    
 
   }
   
@@ -90,7 +85,7 @@ const Currency = () => {
           <div className="main-screen-bottom-left">
             <label htmlFor="currency"></label>
             <select
-              value={fromvalue}
+              value={currencyFrom}
               onChange={fromValueChange}
             >
               <option value="BRL">BRL - Real</option>
@@ -105,7 +100,7 @@ const Currency = () => {
           <div className="main-screen-bottom-right">
             <label htmlFor="cars"></label>
             <select
-              value={tovalue}
+              value={currencyTo}
               onChange={toValueChange}
             >
               <option value="BRL">BRL - Real</option>
