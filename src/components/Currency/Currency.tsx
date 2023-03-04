@@ -1,28 +1,10 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import "./Currency.css";
-import spin from "../../assets/spin.gif";
 import currencyService from "../../services/currency";
 import { CurrencyQuote } from "../../services/currency";
-import { CircularProgress, Input, Select, Text } from "@chakra-ui/react";
+import { CircularProgress, Input, Select, Text, Heading } from "@chakra-ui/react";
+import { AVAILABLE_CURRENCY } from "../../constants/available";
 
-const AVAILABLE_CURRENCY = [
-  {
-    key: "BRL",
-    label: "Real",
-  },
-  {
-    key: "USD",
-    label: "Dólar",
-  },
-  {
-    key: "EUR",
-    label: "Euro",
-  },
-  {
-    key: "BTC",
-    label: "Bitcoin",
-  },
-];
 
 const Currency = () => {
   const [currencyFrom, setCurrencyFrom] = useState("BRL");
@@ -64,7 +46,7 @@ const Currency = () => {
       <div className="main-screen df">
         <div className="main-screen-top">
           <i className='bx bxs-dollar-circle' ></i>
-          <Text color="whatsapp.300" fontSize='5xl'>Currency converter</Text>
+          <h1>Currency now</h1>
         </div>
 
         <div className="main-screen-bottom">
