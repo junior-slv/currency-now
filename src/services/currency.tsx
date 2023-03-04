@@ -4,8 +4,8 @@ export type CurrencyQuote = {
   bid: string;
   code: string;
   codein: string;
-  high: number;
-  low: number;
+  high: string;
+  low: string;
   varBid: string;
   pctChange: string;
   timestamp: string;

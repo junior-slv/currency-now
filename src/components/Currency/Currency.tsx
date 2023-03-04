@@ -1,71 +1,62 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import "./Currency.css";
-import axios from "axios";
 import spin from '../../assets/spin.gif'
 import currencyService from "../../services/currency";
 import { CurrencyQuote } from "../../services/currency";
 
+const AVAILABLE_CURRENCY = [
+  {
+    key: 'BRL',
+    label: 'Real'
+  },
+  {
+    key: 'USD',
+    label: 'Dólar',
+  },
+  {
+    key: 'EUR',
+    label: 'Euro',
+  },
+  {
+    key: 'BTC',
+    label: 'Bitcoin',
+  }
+];
 
 const Currency = () => {
   const [currencyFrom, setCurrencyFrom] = useState("BRL");
   const [currencyTo, setCurrencyTo] = useState("USD");
-  const [finalCurrent, setFinalCurrent] = useState(Number);
   const [currencyQuote, setCurrencyQuote] = useState<null | CurrencyQuote>(
     null
   );
-  const [loading, setLoading] = useState(true)  
-  const [multiplier, setMultiplier] = useState(0);
-  const [count, setCount] = useState(0);  
+  const [inputValue, setInputValue] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const current = parseInt(e.currentTarget.value)
-    setFinalCurrent(current*multi)
-  }
+  const handleChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+    const current = parseInt(e.currentTarget.value);
+    setInputValue(current);
+  }, []);
 
   useEffect(() => {
     setLoading(true);
     currencyService
       .getLastQuote(currencyFrom, currencyTo)
-      .then(data => setCurrencyQuote(data))
+      .then(data => {
+        setCurrencyQuote(data)
+      })
+    
       .catch((err) => {
         console.error("Error" + err);
+      }).finally(() => {
+        setLoading(false);
       });
-      let multi:any = currencyQuote?.high
-      multi = parseFloat(multi)
-      setLoading(false);
-  }, []);
-    //ARRUMAR UM MANEIRA DE CHAMAR O USEEFFECT ESPECIFICO
-    const toValueChange = (e: any) => {
-    setCurrencyTo(e.target.value)
-    setCount(count + 1);
-      
-    
-  }
+  }, [currencyFrom, currencyTo]);
 
-  let multi: any = currencyQuote?.high;
-  multi = parseFloat(multi);
+  const convertedValue = useMemo<string>(() => {
+    const parsedValue = parseFloat(currencyQuote?.high || '0');
+    return (parsedValue * inputValue).toFixed(2);
+  }, [currencyQuote, inputValue]);
 
-  
-
-
-  const fromValueChange = (e: any) => {
-    setCurrencyFrom(e.target.value)
-    // setCurrencyFrom(fromto)
-    currencyService
-    .getLastQuote(currencyFrom, currencyTo)
-    .then(data => setCurrencyQuote(data))
-    .catch((err) => {
-      console.error("Error" + err);
-    });
-    let multi:any = currencyQuote?.high
-    multi = parseFloat(multi)
-      console.log(currencyFrom);
-      console.log(currencyTo);
-      
-    
-
-  }
-  
   return (
     <div className="container">
       <div className="main-screen_ df">
@@ -79,14 +70,20 @@ const Currency = () => {
             <label htmlFor="currency"></label>
             <select
               value={currencyFrom}
-              onChange={fromValueChange}
+              onChange={(e) => { setCurrencyFrom(e.target.value); }}
             >
-              <option value="BRL">BRL - Real</option>
-              <option value="USD">USD - Dolar</option>
-              <option value="EUR">EUR - Euro</option>
+              {AVAILABLE_CURRENCY
+                .filter(currency => currencyTo !== currency.key)
+                .map(currency => (
+                <option
+                  key={currency.key}
+                  value={currency.key}
+                >
+                  {currency.key} - {currency.label}
+                </option>
+              ))}
             </select>
             <input onChange={handleChange} type="text" placeholder="1" name="" id="" />
-
             <span>
             </span>
           </div>
@@ -94,18 +91,26 @@ const Currency = () => {
             <label htmlFor="cars"></label>
             <select
               value={currencyTo}
-              onChange={toValueChange}
+              onChange={(e) => { setCurrencyTo(e.target.value) }}
             >
-              <option value="BRL">BRL - Real</option>
-              <option value="USD">USD - Dolar</option>
-              <option value="EUR">EUR - Euro</option>
+              {AVAILABLE_CURRENCY
+                .filter(currency => currencyFrom !== currency.key)
+                .map(currency => (
+                  <option
+                    key={currency.key}
+                    value={currency.key}
+                  >
+                    {currency.key} - {currency.label}
+                  </option>
+                  )
+                )
+              }
             </select>
-            <input onChange={handleChange} type="number" placeholder="1" name="" id="" />
+            <input type="number" readOnly name="" id="" value={convertedValue} />
 
           </div>
         </div>
         <span>
-          <p>Final value: {finalCurrent}</p>
           <span className={loading ? 'loading' : 'loading-none'}><img src={spin} alt="" /></span>
         </span>
       </div>
