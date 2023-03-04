@@ -1,26 +1,27 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import "./Currency.css";
-import spin from '../../assets/spin.gif'
+import spin from "../../assets/spin.gif";
 import currencyService from "../../services/currency";
 import { CurrencyQuote } from "../../services/currency";
+import { CircularProgress, Input, Select, Text } from "@chakra-ui/react";
 
 const AVAILABLE_CURRENCY = [
   {
-    key: 'BRL',
-    label: 'Real'
+    key: "BRL",
+    label: "Real",
   },
   {
-    key: 'USD',
-    label: 'Dólar',
+    key: "USD",
+    label: "Dólar",
   },
   {
-    key: 'EUR',
-    label: 'Euro',
+    key: "EUR",
+    label: "Euro",
   },
   {
-    key: 'BTC',
-    label: 'Bitcoin',
-  }
+    key: "BTC",
+    label: "Bitcoin",
+  },
 ];
 
 const Currency = () => {
@@ -41,77 +42,92 @@ const Currency = () => {
     setLoading(true);
     currencyService
       .getLastQuote(currencyFrom, currencyTo)
-      .then(data => {
-        setCurrencyQuote(data)
+      .then((data) => {
+        setCurrencyQuote(data);
       })
-    
+
       .catch((err) => {
         console.error("Error" + err);
-      }).finally(() => {
+      })
+      .finally(() => {
         setLoading(false);
       });
   }, [currencyFrom, currencyTo]);
 
   const convertedValue = useMemo<string>(() => {
-    const parsedValue = parseFloat(currencyQuote?.high || '0');
+    const parsedValue = parseFloat(currencyQuote?.high || "0");
     return (parsedValue * inputValue).toFixed(2);
   }, [currencyQuote, inputValue]);
 
   return (
     <div className="container">
-      <div className="main-screen_ df">
-        <div className="main-screen-top df">
-          <h2>Currency converter</h2>
+      <div className="main-screen df">
+        <div className="main-screen-top">
+          <i className='bx bxs-dollar-circle' ></i>
+          <Text color="whatsapp.300" fontSize='5xl'>Currency converter</Text>
         </div>
-        <div className="main-screen-middle df">
-        </div>
+
         <div className="main-screen-bottom">
           <div className="main-screen-bottom-left">
-            <label htmlFor="currency"></label>
-            <select
+            <Select
+              bg="white"
+              color="black"
               value={currencyFrom}
-              onChange={(e) => { setCurrencyFrom(e.target.value); }}
+              onChange={(e) => {
+                setCurrencyFrom(e.target.value);
+              }}
             >
-              {AVAILABLE_CURRENCY
-                .filter(currency => currencyTo !== currency.key)
-                .map(currency => (
-                <option
-                  key={currency.key}
-                  value={currency.key}
-                >
+              {AVAILABLE_CURRENCY.filter(
+                (currency) => currencyTo !== currency.key
+              ).map((currency) => (
+                <option key={currency.key} value={currency.key}>
                   {currency.key} - {currency.label}
                 </option>
               ))}
-            </select>
-            <input onChange={handleChange} type="text" placeholder="1" name="" id="" />
-            <span>
-            </span>
+            </Select>
+            <Input
+              onChange={handleChange}
+              type="number"
+              placeholder="1"
+              bg="white"
+              color="black"
+            />
+
           </div>
+          <div className="main-screen-middle">
+          <p><i className='bx bx-right-arrow-alt'></i></p>
+        </div>
           <div className="main-screen-bottom-right">
             <label htmlFor="cars"></label>
-            <select
+            <Select
+              bg="white"
+              color="black"
               value={currencyTo}
-              onChange={(e) => { setCurrencyTo(e.target.value) }}
+              onChange={(e) => {
+                setCurrencyTo(e.target.value);
+              }}
             >
-              {AVAILABLE_CURRENCY
-                .filter(currency => currencyFrom !== currency.key)
-                .map(currency => (
-                  <option
-                    key={currency.key}
-                    value={currency.key}
-                  >
-                    {currency.key} - {currency.label}
-                  </option>
-                  )
-                )
-              }
-            </select>
-            <input type="number" readOnly name="" id="" value={convertedValue} />
-
+              {AVAILABLE_CURRENCY.filter(
+                (currency) => currencyFrom !== currency.key
+              ).map((currency) => (
+                <option key={currency.key} value={currency.key}>
+                  {currency.key} - {currency.label}
+                </option>
+              ))}
+            </Select>
+            <Input
+              type="number"
+              readOnly
+              bg="white"
+              color="black"
+              value={convertedValue}
+            />
           </div>
         </div>
         <span>
-          <span className={loading ? 'loading' : 'loading-none'}><img src={spin} alt="" /></span>
+          <span className={loading ? "loading" : "loading-none"}>
+            <CircularProgress isIndeterminate color="green.300" />
+          </span>
         </span>
       </div>
     </div>
