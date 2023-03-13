@@ -2,9 +2,16 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import "./Currency.css";
 import currencyService from "../../services/currency";
 import { CurrencyQuote } from "../../services/currency";
-import { CircularProgress, Input, Select, Text, Heading } from "@chakra-ui/react";
+import {
+  Container,
+  CircularProgress,
+  Input,
+  Select,
+  Text,
+  Heading,
+  Box,
+} from "@chakra-ui/react";
 import { AVAILABLE_CURRENCY } from "../../constants/available";
-
 
 const Currency = () => {
   const [currencyFrom, setCurrencyFrom] = useState("BRL");
@@ -42,11 +49,19 @@ const Currency = () => {
   }, [currencyQuote, inputValue]);
 
   return (
-    <div className="container">
-      <div className="main-screen df">
+    <Container
+      maxW="100vw"
+      height="100vh"
+      bg="gray.900"
+      color="#262626"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+    >
+      <Box maxW="md" bg="whiteAlpha.800" padding="15" boxShadow='dark-lg' p='6' rounded='md'>
         <div className="main-screen-top">
-          <i className='bx bxs-dollar-circle' ></i>
-          <h1>Currency now</h1>
+          <Text fontSize="32px">Currency converter</Text>
+          <i className='bx bx-dollar'></i>    
         </div>
 
         <div className="main-screen-bottom">
@@ -74,11 +89,12 @@ const Currency = () => {
               bg="white"
               color="black"
             />
-
           </div>
           <div className="main-screen-middle">
-          <p><i className='bx bx-right-arrow-alt'></i></p>
-        </div>
+            <p>
+              <i className="bx bx-right-arrow-alt"></i>
+            </p>
+          </div>
           <div className="main-screen-bottom-right">
             <label htmlFor="cars"></label>
             <Select
@@ -111,8 +127,8 @@ const Currency = () => {
             <CircularProgress isIndeterminate color="green.300" />
           </span>
         </span>
-      </div>
-    </div>
+      </Box>
+    </Container>
   );
 };
 
