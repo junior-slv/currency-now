@@ -62,10 +62,10 @@ API manipulation using Axios, deepening knowledge of react hooks and component i
 
 
 
-## Autores
+## Autor
 
 - [@junior-slv](https://www.github.com/junior-slv)
-
+- [@willianrod](https://www.github.com/willianrod)
 
 ## License
 
