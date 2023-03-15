@@ -24,7 +24,7 @@ To run this app on your device use:
 
 
 
-## Demonstração
+## Demonstration
 
 ![Demo](https://raw.githubusercontent.com/junior-slv/currency-now/master/src/assets/image.png)
 
